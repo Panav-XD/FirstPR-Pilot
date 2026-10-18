@@ -1,0 +1,16 @@
+import assert from 'node:assert/strict';
+import { parseRepo, fetchIssues, fetchContext, verifyPlan, extractJson, buildMessages } from '../lib/core.js';
+assert.deepEqual(parseRepo('https://github.com/vitejs/vite/issues/1'), { owner: 'vitejs', name: 'vite' });
+assert.deepEqual(parseRepo('pallets/flask'), { owner: 'pallets', name: 'flask' });
+assert.throws(() => parseRepo('nonsense'));
+assert.equal(extractJson('<think>{x}</think>```json\n{"a":1}\n```').a, 1);
+const { issues, source } = await fetchIssues('vitejs', 'vite');
+console.log('issues:', issues.length, 'via', source);
+const ctx = await fetchContext('vitejs', 'vite');
+const real = ctx.promptPaths[0];
+const v = verifyPlan({ steps: [{ title: 't', detail: 'Edit `packages/fake/nope.ts` now', files: [real, 'not/a/real/file.js'], new_files: ['packages/brand-new.ts', 'ghost-dir/x.ts'] }] }, ctx);
+console.log(JSON.stringify(v.steps[0].refs), v.missing);
+assert.equal(v.steps[0].refs.find((r) => r.path === real).status, 'ok');
+assert.deepEqual(v.missing.sort(), ['ghost-dir/x.ts', 'not/a/real/file.js', 'packages/fake/nope.ts']);
+console.log('prompt chars:', buildMessages(ctx, issues[0])[1].content.length);
+console.log('ALL OK');

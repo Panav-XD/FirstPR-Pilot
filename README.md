@@ -12,7 +12,7 @@ A verified first-contribution guide for open-source newcomers (Hacktoberfest Hac
 4. If the first draft invented files, the model is shown the exact bad paths and rewrites the plan once. The UI reports what was caught.
 
 ## Open-source pieces
-Open-weight models (`gpt-oss-120b`, `gpt-oss-20b`, Llama 3.3 70B, Qwen3 32B) hosted on Groq, the public GitHub API, Vite, Vercel serverless functions. MIT licensed.
+Open-weight models (`gpt-oss-120b`, `gpt-oss-20b`, Llama 3.3 70B, Llama 3.1 8B) hosted on Groq, the public GitHub API, Vite, Vercel serverless functions. MIT licensed.
 
 ## Run and deploy
 1. Create a free key at console.groq.com and a GitHub token with no permissions (Settings > Developer settings).
