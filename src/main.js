@@ -55,16 +55,22 @@ async function generate(btn) {
 function render(d) {
   const { stats } = d;
   const note = stats.caught
-    ? `The first draft named ${stats.caught} file${stats.caught > 1 ? 's' : ''} that do not exist. ${stats.remaining ? `${stats.remaining} still could not be verified, so check them by hand.` : 'The plan was rewritten and now checks out.'}`
+    ? `The first draft named ${stats.caught} file${stats.caught > 1 ? 's' : ''} that ${stats.caught > 1 ? 'do' : 'does'} not exist. ${stats.remaining ? `${stats.remaining} still could not be verified, so check ${stats.remaining > 1 ? 'them' : 'it'} by hand.` : 'The plan was rewritten and now checks out.'}`
     : 'The first draft used only files that exist.';
   let n = 0;
-  const steps = d.steps.map((s) => el('div', { class: 'step' },
-    el('h3', {}, s.title), el('p', {}, s.detail),
-    el('ul', { class: 'ledger' }, s.refs.map((r) => {
-      const mark = r.status === 'missing' ? '−' : '+';
-      const label = { ok: 'found in repo', new: 'new file in existing folder', missing: 'not in repo' }[r.status];
-      return el('li', { class: r.status, style: `animation-delay:${(n++) * 70}ms` }, el('b', {}, mark), el('span', {}, r.path), el('span', {}, label));
-    }))));
+  const steps = d.steps.map((s) => {
+    // For each path that is not in the repo, show real files with the same filename (the "did you mean" hint).
+    const hints = s.refs.filter((r) => r.status === 'missing' && Array.isArray(r.suggest) && r.suggest.length);
+    return el('div', { class: 'step' },
+      el('h3', {}, s.title), el('p', {}, s.detail),
+      el('ul', { class: 'ledger' }, s.refs.map((r) => {
+        const mark = r.status === 'missing' ? '−' : '+';
+        const label = { ok: 'found in repo', new: 'new file in existing folder', missing: 'not in repo' }[r.status];
+        return el('li', { class: r.status, style: `animation-delay:${(n++) * 70}ms` }, el('b', {}, mark), el('span', {}, r.path), el('span', {}, label));
+      })),
+      ...hints.map((r) => el('p', { class: 'hint', style: 'font-size:0.85rem;margin:0.4rem 0 0;color:#7a1f1f;word-break:break-all' },
+        el('b', {}, 'Did you mean: '), r.suggest.join(' or '))));
+  });
   $('#result').replaceChildren(
     el('h2', {}, `#${d.issue.number} ${d.issue.title}`),
     el('p', {}, d.plan.summary || '', ` Difficulty: ${d.plan.difficulty || 'unknown'}.`),
