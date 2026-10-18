@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>FirstPR Pilot</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;800&family=Public+Sans:wght@400;600&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <main>
+    <h1>Your first pull request, with every file name checked.</h1>
+    <dl class="about">
+      <div><dt>Why</dt><dd>Newcomers freeze at “where do I start?”. AI guidance that invents file names makes it worse.</dd></div>
+      <div><dt>For whom</dt><dd>First-time open-source contributors, such as Hacktoberfest participants.</dd></div>
+      <div><dt>Built with</dt><dd>Open-weight models on Groq, the public GitHub API, Vite. MIT licensed.</dd></div>
+    </dl>
+    <form id="form">
+      <label for="repo">GitHub repository</label>
+      <div class="row">
+        <input id="repo" value="vitejs/vite" autocomplete="off" spellcheck="false" />
+        <select id="model" aria-label="Model"></select>
+        <button id="find" type="submit">Find good first issues</button>
+      </div>
+      <p class="chips">Try: <button type="button" class="chip">vitejs/vite</button> <button type="button" class="chip">withastro/astro</button> <button type="button" class="chip">pallets/flask</button></p>
+    </form>
+    <p id="status" role="status"></p>
+    <section id="issues"></section>
+    <section id="result"></section>
+  </main>
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>
