@@ -1,5 +1,5 @@
 import './style.css';
-const MODELS = ['openai/gpt-oss-120b', 'openai/gpt-oss-20b', 'qwen/qwen3.8-27b', 'llama-3.1-8b-instant'];
+const MODELS = ['openai/gpt-oss-120b', 'openai/gpt-oss-20b', 'qwen/qwen3.8-27b'];
 const $ = (s) => document.querySelector(s);
 function el(tag, props = {}, ...kids) {
   const n = document.createElement(tag);
