@@ -45,7 +45,14 @@ async function generate(btn) {
   status('Drafting a plan, then checking every file against the repo…');
   try {
     let data;
-    try { data = await api({ action: 'plan', repo, issueNumber, model }); localStorage.setItem(key, JSON.stringify(data)); }
+    try {
+      data = await api({ action: 'plan', repo, issueNumber, model });
+      if (data.stats && data.stats.total === 0) {
+        status('The plan named no files. Trying once more…');
+        try { const again = await api({ action: 'plan', repo, issueNumber, model }); if (again.stats && again.stats.total > 0) data = again; } catch {}
+      }
+      localStorage.setItem(key, JSON.stringify(data));
+    }
     catch (err) { const saved = localStorage.getItem(key); if (!saved) throw err; data = JSON.parse(saved); }
     status('');
     render(data);
