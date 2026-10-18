@@ -54,7 +54,10 @@ async function generate(btn) {
 
 function render(d) {
   const { stats } = d;
-  const note = stats.caught
+  const none = stats.total === 0;
+  const note = none
+    ? 'The plan names no files, so there was nothing to check. Run it again, or check the steps by hand.'
+    : stats.caught
     ? `The first draft named ${stats.caught} file${stats.caught > 1 ? 's' : ''} that ${stats.caught > 1 ? 'do' : 'does'} not exist. ${stats.remaining ? `${stats.remaining} still could not be verified, so check ${stats.remaining > 1 ? 'them' : 'it'} by hand.` : 'The plan was rewritten and now checks out.'}`
     : 'The first draft used only files that exist.';
   let n = 0;
@@ -74,7 +77,7 @@ function render(d) {
   $('#result').replaceChildren(
     el('h2', {}, `#${d.issue.number} ${d.issue.title}`),
     el('p', {}, d.plan.summary || '', ` Difficulty: ${d.plan.difficulty || 'unknown'}.`),
-    el('div', { class: 'summary' + (stats.remaining ? ' warn' : '') }, el('b', {}, `${stats.verified} of ${stats.total} file references verified.`), ' ' + note),
+    el('div', { class: 'summary' + (stats.remaining || none ? ' warn' : '') }, el('b', {}, none ? 'No file references to verify.' : `${stats.verified} of ${stats.total} file references verified.`), ' ' + note),
     ...steps,
     (d.plan.run_locally || []).length ? el('div', {}, el('h3', {}, 'Run it locally'), el('pre', {}, d.plan.run_locally.join('\n'))) : null,
     d.plan.how_to_test ? el('div', {}, el('h3', {}, 'Test your change'), el('p', {}, d.plan.how_to_test)) : null,
